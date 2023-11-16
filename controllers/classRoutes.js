@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {Class} = require('../models');
+const {Class, Student} = require('../models');
 
 router.get('/',(req,res)=>{
     Class.findAll().then(dbClasses=>{
@@ -16,7 +16,9 @@ router.get('/',(req,res)=>{
 
     
 router.get('/:id',(req,res)=>{
-    Class.findByPk(req.params.id).then(dbClass=>{
+    Class.findByPk(req.params.id,{
+        include:[Student]
+    }).then(dbClass=>{
         if(!dbClass){
             res.status(404).json({msg:"no such Class"})
         } else{

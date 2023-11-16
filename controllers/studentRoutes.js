@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {Student} = require('../models');
+const {Student,Class} = require('../models');
 
 router.get('/',(req,res)=>{
     Student.findAll().then(dbStudents=>{
@@ -16,7 +16,9 @@ router.get('/',(req,res)=>{
 
     
 router.get('/:id',(req,res)=>{
-    Student.findByPk(req.params.id).then(dbStudent=>{
+    Student.findByPk(req.params.id,{
+        include:[Class]
+    }).then(dbStudent=>{
         if(!dbStudent){
             res.status(404).json({msg:"no such Student"})
         } else{
@@ -41,6 +43,14 @@ router.post('/',(req,res)=>{
         res.status(500).json({
             msg:"womp womp womp",
             err
+        })
+    })
+})
+
+router.post("/:stuId/addClass/:classId",(req,res)=>{
+    Student.findByPk(req.params.stuId).then(dbStu=>{
+        dbStu.addClass(req.params.classId).then(data=>{
+            res.json(data);
         })
     })
 })

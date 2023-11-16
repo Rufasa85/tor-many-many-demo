@@ -33,8 +33,15 @@ const classData = [
 
 const seedMe = async()=>{
     await sequelize.sync({force:true});
-    await Student.bulkCreate(studentData);
-    await Class.bulkCreate(classData);
+    const dbStudents = await Student.bulkCreate(studentData);
+    const dbClasses = await Class.bulkCreate(classData);
+    console.log(dbStudents);
+    await dbStudents[0].addClass(2)
+    await dbStudents[0].addClass(3)
+    await dbStudents[1].addClasses([1,3])
+    await dbStudents[1].removeClass(1)
+
+    await dbClasses[0].addStudents([1,2,3])
     console.log("seeded!")
     process.exit(0)
 }
